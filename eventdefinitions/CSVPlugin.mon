@@ -1,0 +1,48 @@
+package com.apamax;
+
+/**
+ * Plugin for parsing and encoding CSV data, including handling escaping.
+ */
+event CSVPlugin
+{
+	import "CSVPlugin" as plugin;
+	/**
+	 * Create a CSV decoder.
+	 * @returns A decoder configured for comma-separated.
+	 */
+	static action createCSVDecoder() returns CSVPlugin
+	{
+		return CSVPlugin(",");
+	}
+	/** Create a decoder with a custom delimiter.
+	 *
+	 * @param delimiter A single-charatec delimiter.
+	 * @returns A configured decoder.
+	 */
+	static action createCustomDecoder(string delimiter) returns CSVPlugin
+	{
+		return CSVPlugin(delimiter);
+	}
+	/**
+	 * Decodes a CSV file into rows and columns.
+	 * 
+	 * @param data A string with columns separated by the configured delimiter and rows separated by newlines.
+	 * @returns A sequence of rows each being a sequence of strings.
+	 */
+	action decode(string data) returns sequence<sequence<string> >
+	{
+		return plugin.decode(data, delimiter);
+	}
+	/**
+	 * Encodes a sequence of rows as a CSV file.
+	 * 
+	 * @param data A sequence of rows each being a sequence of strings.
+	 * @returns Each row separated by a newline. Each column separated by the configured delimiter.
+	 */
+	action encode(sequence<sequence<string> > data) returns string
+	{
+		return plugin.encode(data, delimiter);
+	}
+	/** The delimiter. @private */
+	string delimiter;
+}

@@ -1,0 +1,37 @@
+using com.apamax.CSVPlugin;
+
+monitor Testcase
+{
+	action onload()
+	{
+		CSVPlugin csv := CSVPlugin.createCSVDecoder();
+		CSVPlugin tsv := CSVPlugin.createCustomDecoder("\t");
+		
+		sequence<sequence<string> > data := new sequence<sequence<string> >;
+		integer i := 0;
+		while i < 2 {
+			integer j := 0;
+			sequence<string> row := new sequence<string>;
+			while j < 2 {
+				row.append(i.toString()+","+j.toString());
+				j := j + 1;
+			}
+			data.append(row);
+			i := i + 1;
+		}
+		
+		print data.toString();
+		
+		string csvString := csv.encode(data);
+		print csvString;
+		sequence<sequence<string> > csvData := csv.decode(csvString);
+		if csvData != data { log "CSV Round-trip mis-match (expected "+data.toString()+" but got "+csvData.toString()+")" at ERROR; }
+		print csvData.toString();
+		
+		string tsvString := tsv.encode(data);
+		print tsvString;
+		sequence<sequence<string> > tsvData := tsv.decode(tsvString);
+		if tsvData != data { log "TSV Round-trip mis-match (expected "+data.toString()+" but got "+tsvData.toString()+")" at ERROR; }
+		print tsvData.toString();
+	}
+}

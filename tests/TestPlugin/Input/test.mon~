@@ -1,0 +1,11 @@
+using com.apamax.ConfigurationPlugin;
+
+monitor Testcase
+{
+	action onload()
+	{
+		print ConfigurationPlugin.getAllProperties().toString();
+		print ConfigurationPlugin.getProperty("COMMAND_LINE").toString();
+		print ConfigurationPlugin.getProperty("UNKNOWN").toString();
+	}
+}
