@@ -13,7 +13,7 @@ On Windows run:
 
 ## Use from EPL
 
-From EPL you should inject the CSVPlugin.mon file, then create instances of the CSVPlugin class as decoders, configured with a separator. These instances can be used to encode and decode delimiter-separated values. These will be converted to a sequence<sequence<string> > type. For comma-separated use **CVSPlugin.createCSVDecoder()**:
+From EPL you should inject the CSVPlugin.mon file, then create instances of the CSVPlugin class as decoders, configured with a separator. These instances can be used to encode and decode delimiter-separated values. These will be converted to a `sequence<sequence<string> >` type. For comma-separated use `CVSPlugin.createCSVDecoder()`:
 
     CSVPlugin csv := CSVPlugin.createCSVDecoder();
     
@@ -22,8 +22,7 @@ From EPL you should inject the CSVPlugin.mon file, then create instances of the 
 	 // ...
     text := csv.encode(data);
 
-To specify your own delimiter use **CSVPlugin.createCustomDecoder()**:
-
+To specify your own delimiter use `CSVPlugin.createCustomDecoder()`:
     
     CSVPlugin tsv := CSVPlugin.createCustomDecoder("\t");
     
