@@ -15,7 +15,7 @@ On Windows run:
 
 From EPL you should inject the CSVPlugin.mon file, then create instances of the CSVPlugin class as decoders, configured with a separator. These instances can be used to encode and decode delimiter-separated values. These will be converted to a `sequence<sequence<string> >` type. For comma-separated use `CVSPlugin.createCSVDecoder()`:
 
-    CSVPlugin csv := CSVPlugin.createCSVDecoder();
+    com.apamax.CSVPlugin csv := com.apamax.CSVPlugin.createCSVDecoder();
     
 	 string text := input.text; // comma-separated
 	 sequence<sequence<string> > data := csv.decode(text);
@@ -24,7 +24,7 @@ From EPL you should inject the CSVPlugin.mon file, then create instances of the 
 
 To specify your own delimiter use `CSVPlugin.createCustomDecoder()`:
     
-    CSVPlugin tsv := CSVPlugin.createCustomDecoder("\t");
+    com.apamax.CSVPlugin tsv := com.apamax.CSVPlugin.createCustomDecoder("\t");
     
 	 string text := input.text; // tab-separated
 	 sequence<sequence<string> > data := tsv.decode(text);
