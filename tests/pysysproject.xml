@@ -10,7 +10,7 @@
 	<!--
 	Specify a minimum required python version to run these tests
 	-->
-	<requires-python>3.6.6</requires-python>
+	<requires-python>3.6</requires-python>
 
 
 	<!-- 

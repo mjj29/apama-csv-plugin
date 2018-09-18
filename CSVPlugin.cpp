@@ -1,12 +1,8 @@
-#include<cinttypes>
 #include<epl_plugin.hpp>
 #include<sag_connectivity_plugins.hpp>
-#include<CSVParser.hpp>
+#include<rapidcsv.h>
 #include<string>
 
-using com::softwareag::connectivity::Logger;
-using com::softwareag::connectivity::AbstractCodec;
-using com::softwareag::connectivity::PluginConstructorParameters;
 using com::softwareag::connectivity::AbstractSimpleCodec;
 using com::softwareag::connectivity::Message;
 using com::softwareag::connectivity::list_t;
@@ -35,33 +31,37 @@ public:
 	}
 	list_t decode(const std::string &str, const char *delimiter)
 	{
-		csv::Parser csv{str, csv::ePURE, delimiter[0]};
 		list_t l{};
-		for (size_t i = 0; i < csv.rowCount(); ++i) {
+		std::istringstream iss{str};
+		rapidcsv::Document doc(iss, str.size(), rapidcsv::LabelParams(-1, -1), rapidcsv::SeparatorParams(delimiter[0]));
+		for (size_t i = 0; i < doc.GetRowCount(); ++i) {
+			auto row = doc.GetRow<std::string>(i);
 			list_t r{};
-			for (size_t j = 0; j < csv[i].size(); ++j) {
-				r.push_back(csv[i][j]);
+			for (auto it = row.begin(); it != row.end(); ++it) {
+				if (it->at(0) == '"' && it->at(it->length()-1) == '"') {
+					r.push_back(it->substr(1, it->length()-2));
+				} else {
+					r.push_back(*it);
+				}
 			}
-			l.push_back(data_t{std::move(r)});
+			l.push_back(std::move(r));
 		}
 		return l;
 	}
 	std::string encode(const list_t &l, const char *delimiter)
 	{
-		std::ostringstream oss;
+		rapidcsv::Document doc("", rapidcsv::LabelParams(-1, -1), rapidcsv::SeparatorParams(delimiter[0]));
+		size_t rows = 0;
 		for (auto it = l.begin(); it != l.end(); ++it) {
-			const list_t &r = get<list_t>(*it);
+			const auto &r = get<list_t>(*it);
+			std::vector<std::string> row{};
 			for (auto jt = r.begin(); jt != r.end(); ++jt) {
-				if (jt != r.begin()) oss << delimiter[0];
-				std::string val = convert_to<std::string>(*jt);
-				if (std::string::npos != val.find(delimiter)) {
-					oss << '"' << val << '"';
-				} else {
-					oss << val;
-				}
+				row.push_back(get<const char*>(*jt));
 			}
-			oss << std::endl;
+			doc.SetRow(rows++, row);
 		}
+		std::ostringstream oss;
+		doc.Save(oss);
 		return oss.str();
 	}
 	virtual bool transformMessageTowardsTransport(Message &m) override
