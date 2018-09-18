@@ -1,0 +1,53 @@
+connectivityPlugins:
+  csvCodec:
+    libraryName: CSVPlugin
+    class: CSVCodec
+  mapperCodec:
+    libraryName: MapperCodec
+    class: MapperCodec
+  diagnosticCodec:
+    libraryName: DiagnosticCodec
+    class: DiagnosticCodec
+  echoTransport:
+    libraryName: EchoTransport
+    class: EchoTransport
+
+
+startChains:
+  tsvChain:
+    - apama.eventMap
+    - mapperCodec:
+       '*':
+         towardsHost:
+            mapFrom:
+              - payload.data: payload
+         towardsTransport:
+            mapFrom:
+              - payload: payload.data
+    - diagnosticCodec:
+        output: file
+        fileName: tsv-before.txt
+    - csvCodec:
+        delimiter: '	'
+    - diagnosticCodec:
+        output: file
+        fileName: tsv-after.txt
+    - echoTransport
+  csvChain:
+    - apama.eventMap
+    - mapperCodec:
+       '*':
+         towardsHost:
+            mapFrom:
+              - payload.data: payload
+         towardsTransport:
+            mapFrom:
+              - payload: payload.data
+    - diagnosticCodec:
+        output: file
+        fileName: csv-before.txt
+    - csvCodec
+    - diagnosticCodec:
+        output: file
+        fileName: csv-after.txt
+    - echoTransport

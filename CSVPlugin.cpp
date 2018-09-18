@@ -4,6 +4,7 @@
 #include<string>
 
 using com::softwareag::connectivity::AbstractSimpleCodec;
+using com::softwareag::connectivity::MapExtractor;
 using com::softwareag::connectivity::Message;
 using com::softwareag::connectivity::list_t;
 using com::softwareag::connectivity::map_t;
@@ -19,7 +20,14 @@ class CSVCodec: public AbstractSimpleCodec, public EPLPlugin<CSVCodec>
 public:
 	explicit CSVCodec(const CodecConstructorParameters &param)
 		: AbstractSimpleCodec(param), base_plugin_t("CSVPlugin")
-	{}
+	{
+		MapExtractor configEx(config, "config");
+		std::string delim = configEx.getStringAllowEmpty("delimiter", ",");
+		configEx.checkNoItemsRemaining();
+		if (delim.length() != 1) throw std::runtime_error("Delimiters must be a single character");
+		delimiter = delim.at(0);
+		base_plugin_t::logger.info("Configured CSV codec with delimiter %d (%s)", delimiter, delim.c_str());
+	}
 	explicit CSVCodec()
 		: AbstractSimpleCodec(CodecConstructorParameters("CSVCodec", "", map_t{}, nullptr, nullptr)),
 		  base_plugin_t("CSVPlugin")

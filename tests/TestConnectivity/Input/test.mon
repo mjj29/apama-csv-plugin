@@ -1,0 +1,38 @@
+event Data
+{
+	sequence<sequence<string> > data;
+}
+
+monitor Testcase
+{
+	action onload()
+	{
+		monitor.subscribe("csvChain");
+		monitor.subscribe("tsvChain");
+		sequence<sequence<string> > data := new sequence<sequence<string> >;
+		integer i := 0;
+		while i < 2 {
+			integer j := 0;
+			sequence<string> row := new sequence<string>;
+			while j < 2 {
+				row.append(i.toString()+","+j.toString());
+				j := j + 1;
+			}
+			data.append(row);
+			i := i + 1;
+		}
+
+		on all Data() as d {
+			if (data != d.data) {
+				log "Round-trip mis-match (expected "+data.toString()+" but got "+d.data.toString()+")" at ERROR; 
+			} else {
+				log "Round-trip OK" at INFO;
+			}
+		}
+
+		com.softwareag.connectivity.ConnectivityPlugins.onApplicationInitialized();		
+
+		send Data(data) to "csvChain";
+		send Data(data) to "tsvChain";
+	}
+}
