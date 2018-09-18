@@ -5,11 +5,11 @@ Apama EPL plugin and connectivity codec for parsing CSV data. Both the plugin an
 
 In an Apama command prompt on Linux run:
 
-   g++ -std=c++11 -o $APAMA\_WORK/lib/libCSVPlugin.so -I$APAMA\_HOME/include -L$APAMA\_HOME/lib -lapclient -I. -shared -fPIC CSVPlugin.cpp
+    g++ -std=c++11 -o $APAMA_WORK/lib/libCSVPlugin.so -I$APAMA_HOME/include -L$APAMA_HOME/lib -lapclient -I. -shared -fPIC CSVPlugin.cpp
 
 On Windows run:
 
-   g++ -std=c++11 -o %APAMA\_WORK%\lib\CSVPlugin.dll -I%APAMA\_HOME%\include -L%APAMA\_HOME%\lib -lapclient -I. -shared CSVPlugin.cpp
+    g++ -std=c++11 -o %APAMA_WORK%\lib\CSVPlugin.dll -I%APAMA_HOME%\include -L%APAMA_HOME%\lib -lapclient -I. -shared CSVPlugin.cpp
 
 ## Use from EPL
 
