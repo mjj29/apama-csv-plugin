@@ -9,11 +9,14 @@ This works with Apama 10.3.0.1 or 10.1.0.10 (or later fixes to either line)
 
 In an Apama command prompt on Linux run:
 
+    mkdir -p $APAMA_WORK/lib $APAMA_WORK/monitors
     g++ -std=c++11 -o $APAMA_WORK/lib/libCSVPlugin.so -I$APAMA_HOME/include -L$APAMA_HOME/lib -lapclient -I. -shared -fPIC CSVPlugin.cpp
+	 cp eventdefinitions/CSVPlugin.mon $APAMA_WORK/monitors/CSVPlugin.mon
 
 On Windows run:
 
     g++ -std=c++11 -o %APAMA_WORK%\lib\CSVPlugin.dll -I%APAMA_HOME%\include -L%APAMA_HOME%\lib -lapclient -I. -shared CSVPlugin.cpp
+	 copy eventdefinitions\CSVPlugin.mon %APAMA_WORK%\monitors\CSVPlugin.mon
 
 To generate the Apama documentation for the CSVPlugin module run this command on Linux:
 
