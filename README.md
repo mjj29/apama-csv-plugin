@@ -5,7 +5,7 @@ Apama EPL plugin and connectivity codec for parsing CSV data. Both the plugin an
 
 This works with Apama 10.3.0.1 or 10.1.0.10 (or later fixes to either line)
 
-## Buliding the plugin
+## Building the plugin
 
 In an Apama command prompt on Linux run:
 
