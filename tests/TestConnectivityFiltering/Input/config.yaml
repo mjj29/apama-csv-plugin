@@ -10,6 +10,7 @@ connectivityPlugins:
     class: DiagnosticCodec
   echoTransport:
     libraryName: EchoTransport
+    directory: ${PARENT_DIR}/../..
     class: EchoTransport
 
 

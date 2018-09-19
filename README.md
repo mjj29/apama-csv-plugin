@@ -1,6 +1,10 @@
 # apama-csv-plugin
 Apama EPL plugin and connectivity codec for parsing CSV data. Both the plugin and codec support user-defined delimiters and quoted fields which would otherwise contain the delimiter. Multiple rows are separated by newlines in the platform-specific newline format.
 
+## Supported Apama version
+
+This works with Apama 10.3.0.1 or 10.1.0.10 (or later fixes to either line)
+
 ## Buliding the plugin
 
 In an Apama command prompt on Linux run:
@@ -19,6 +23,31 @@ Or on Windows:
 
     java -jar %APAMA_HOME%\lib\ap-generate-apamadoc.jar doc eventdefinitions
 
+## Building using Docker
+
+There is a provided Dockerfile which will build the plugin, run tests and produce an image which is your base image, plus the CSV plugin. Application images can then be built from this image. To build the image run:
+
+    docker build -t apama_with_csv_plugin .
+
+By default the public docker images from Docker Store for 10.3 will be used (once 10.3 has been released). To use an older version run:
+
+    docker build -t apama_with_csv_plugin --build-arg APAMA_VERSION=10.1 .
+
+To use custom images from your own repository then use:
+
+    docker build -t apama_with_csv_plugin --build-arg APAMA_BUILDER=builderimage --build-arg APAMA_IMAGE=runtimeimage .
+
+## Running tests
+
+To run the tests for the plugin you will need to use an Apama command prompt.
+
+You will need to compile a test transport:
+
+    g++ -std=c++11 -o tests/libEchoTransport.so -I$APAMA_HOME/include -L$APAMA_HOME/lib -lapclient -I. -shared -fPIC EchoTransport.cpp
+
+Then run the tests from within the tests directory:
+
+    pysys run
 
 ## Use from EPL
 
@@ -66,7 +95,23 @@ The CSV codec takes the following options:
     csvChain
 	   # ...
 	   - csvCodec:
-		    delimiter: '	' # custom delimiter
+		    delimiter: '	' # custom delimiter, must be a single character. Default is ','
+          filterOnContentType: true # if true, only apply to messages with the specified content type set. Default is false
+			 contentType: text/tab-separated-values # the content type to filter and to set when formatted. Default is text/csv
 	   # ...   
+
+When filtering on content types you must ensure that the content type is correctly set on both messages towards host as well as messages towards transport. You can do this with the mapper codec:
+
+    csvChain
+	   # ...
+	   - mapperCodec:
+		    "*":
+			    towardsTransport:
+				    defaultValue:
+					    - metadata.contentType: text/csv
+		# ...
+      - csvCodec:
+		    filterOnContentType: true
+	   # ...
 
 

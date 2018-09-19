@@ -23,10 +23,12 @@ public:
 	{
 		MapExtractor configEx(config, "config");
 		std::string delim = configEx.getStringAllowEmpty("delimiter", ",");
+		filterOnContentType = configEx.get<bool>("filterOnContentType", false);
+		contentTypeValue = configEx.getStringDisallowEmpty("contentType", "text/csv");
 		configEx.checkNoItemsRemaining();
 		if (delim.length() != 1) throw std::runtime_error("Delimiters must be a single character");
 		delimiter = delim.at(0);
-		base_plugin_t::logger.info("Configured CSV codec with delimiter %d (%s)", delimiter, delim.c_str());
+		AbstractSimpleCodec::logger.info("Configured CSV codec with delimiter %s, filterOnContentType %s, contentType %s ", delim.c_str(), filterOnContentType?"true":"false", get<const char*>(contentTypeValue));
 	}
 	explicit CSVCodec()
 		: AbstractSimpleCodec(CodecConstructorParameters("CSVCodec", "", map_t{}, nullptr, nullptr)),
@@ -74,16 +76,34 @@ public:
 	}
 	virtual bool transformMessageTowardsTransport(Message &m) override
 	{
+		map_t::iterator it;
+		if (filterOnContentType && (
+				(it = m.getMetadataMap().find(contentTypeMeta)) == m.getMetadataMap().end() ||
+				it->second != contentTypeValue)) {
+			AbstractSimpleCodec::logger.debug("Skipping message towards transport because content type is not %s", get<const char*>(contentTypeValue));
+			return true;
+		}
 		m.setPayload(encode(get<list_t>(m.getPayload()), &delimiter));
+		m.getMetadataMap()[contentTypeMeta] = contentTypeValue.copy();
 		return true;
 	}
 	virtual bool transformMessageTowardsHost(Message &m) override
 	{
+		map_t::iterator it;
+		if (filterOnContentType && (
+				(it = m.getMetadataMap().find(contentTypeMeta)) == m.getMetadataMap().end() ||
+				it->second != contentTypeValue)) {
+			AbstractSimpleCodec::logger.debug("Skipping message towards host because content type is not %s", get<const char*>(contentTypeValue));
+			return true;
+		}
 		m.setPayload(decode(get<const char*>(m.getPayload()), &delimiter));
 		return true;
 	}
 private:
 	char delimiter = ',';
+	bool filterOnContentType = false;
+	data_t contentTypeMeta{"contentType"};
+	data_t contentTypeValue{"text/csv"};
 };
 
 SAG_DECLARE_CONNECTIVITY_CODEC_CLASS(CSVCodec)

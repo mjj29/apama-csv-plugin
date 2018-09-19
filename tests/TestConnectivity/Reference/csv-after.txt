@@ -1,6 +1,6 @@
-Towards Transport: {sag.type:Data,sag.channel:csvChain} / "0,0","0,1"
+Towards Transport: {contentType:text/csv,sag.type:Data,sag.channel:csvChain} / "0,0","0,1"
 "1,0","1,1"
 
-Towards Host: {sag.type:Data,sag.channel:csvChain} / "0,0","0,1"
+Towards Host: {contentType:text/csv,sag.type:Data,sag.channel:csvChain} / "0,0","0,1"
 "1,0","1,1"
 
