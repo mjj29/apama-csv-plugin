@@ -11,6 +11,15 @@ On Windows run:
 
     g++ -std=c++11 -o %APAMA_WORK%\lib\CSVPlugin.dll -I%APAMA_HOME%\include -L%APAMA_HOME%\lib -lapclient -I. -shared CSVPlugin.cpp
 
+To generate the Apama documentation for the CSVPlugin module run this command on Linux:
+
+    java -jar $APAMA_HOME/lib/ap-generate-apamadoc.jar doc eventdefinitions
+
+Or on Windows:
+
+    java -jar %APAMA_HOME%\lib\ap-generate-apamadoc.jar doc eventdefinitions
+
+
 ## Use from EPL
 
 From EPL you should inject the CSVPlugin.mon file, then create instances of the CSVPlugin class as decoders, configured with a separator. These instances can be used to encode and decode delimiter-separated values. These will be converted to a `sequence<sequence<string> >` type. For comma-separated use `CVSPlugin.createCSVDecoder()`:
