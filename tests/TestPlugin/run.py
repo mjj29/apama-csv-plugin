@@ -7,7 +7,7 @@ class PySysTest(ApamaBaseTest):
 	def execute(self):
 		correlator = CorrelatorHelper(self, name='testcorrelator')
 		correlator.start(logfile='testcorrelator.log')
-		correlator.injectEPL(filenames=['CSVPlugin.mon'], filedir=self.input+"/../../../eventdefinitions")
+		correlator.injectEPL(filenames=['CSVPlugin.mon'], filedir=PROJECT.APAMA_WORK+'/monitors')
 		correlator.injectEPL(filenames=['test.mon'])
 		correlator.flush() 
 
