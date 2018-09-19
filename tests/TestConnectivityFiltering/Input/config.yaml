@@ -1,0 +1,43 @@
+connectivityPlugins:
+  csvCodec:
+    libraryName: CSVPlugin
+    class: CSVCodec
+  mapperCodec:
+    libraryName: MapperCodec
+    class: MapperCodec
+  diagnosticCodec:
+    libraryName: DiagnosticCodec
+    class: DiagnosticCodec
+  echoTransport:
+    libraryName: EchoTransport
+    class: EchoTransport
+
+
+startChains:
+  csvChain:
+    - apama.eventMap
+    - mapperCodec:
+       '*':
+         towardsHost:
+            mapFrom:
+              - payload.data: payload
+              - payload.contentType: metadata.contentType
+            defaultValue:
+              - payload.contentType: none
+         towardsTransport:
+            mapFrom:
+              - metadata.contentType: payload.contentType
+              - payload: payload.data
+    - diagnosticCodec:
+        output: file
+        fileName: before.txt
+    - csvCodec:
+        filterOnContentType: true
+    - csvCodec:
+        delimiter: '	'
+        filterOnContentType: true
+        contentType: text/tab-separated-values
+    - diagnosticCodec:
+        output: file
+        fileName: after.txt
+    - echoTransport

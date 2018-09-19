@@ -1,0 +1,14 @@
+Towards Transport: {contentType:text/csv,sag.type:Data,sag.channel:csvChain} / "0,0","0,1"
+"1,0","1,1"
+
+Towards Transport: {contentType:text/tab-separated-values,sag.type:Data,sag.channel:csvChain} / 0,0	0,1
+1,0	1,1
+
+Towards Transport: {contentType:text/json,sag.type:Data,sag.channel:csvChain} / [[0,0,0,1],[1,0,1,1]]
+Towards Host: {contentType:text/csv,sag.type:Data,sag.channel:csvChain} / "0,0","0,1"
+"1,0","1,1"
+
+Towards Host: {contentType:text/tab-separated-values,sag.type:Data,sag.channel:csvChain} / 0,0	0,1
+1,0	1,1
+
+Towards Host: {contentType:text/json,sag.type:Data,sag.channel:csvChain} / [[0,0,0,1],[1,0,1,1]]
