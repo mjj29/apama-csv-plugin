@@ -22,7 +22,6 @@ COPY . $APAMA_WORK/plugin
 
 RUN mkdir -p $APAMA_WORK/lib $APAMA_WORK/monitors
 RUN g++-8 -std=c++17 -o $APAMA_WORK/lib/libCSVPlugin.so -I$APAMA_HOME/include -L$APAMA_HOME/lib -lapclient -I$APAMA_WORK/plugin -shared -fPIC $APAMA_WORK/plugin/CSVPlugin.cpp
-RUN g++-8 -std=c++17 -o $APAMA_WORK/plugin/tests/libEchoTransport.so -I$APAMA_HOME/include -L$APAMA_HOME/lib -lapclient -I$APAMA_WORK/plugin -shared -fPIC $APAMA_WORK/plugin/EchoTransport.cpp
 RUN cp $APAMA_WORK/plugin/eventdefinitions/CSVPlugin.mon $APAMA_WORK/monitors/
 
 RUN cd ${APAMA_WORK}/plugin/tests && pysys run | tee logfile && grep 'THERE WERE NO NON PASSES' logfile

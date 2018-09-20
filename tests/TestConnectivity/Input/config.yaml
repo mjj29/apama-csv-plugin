@@ -8,10 +8,12 @@ connectivityPlugins:
   diagnosticCodec:
     libraryName: DiagnosticCodec
     class: DiagnosticCodec
-  echoTransport:
-    libraryName: EchoTransport
-    directory: ${PARENT_DIR}/../..
-    class: EchoTransport
+  unitTestHarness:
+    classpath: ${APAMA_HOME}/lib/connectivity-unit-test-harness.jar
+    class: com.softwareag.connectivity.testplugins.UnitTestHarness
+  nullTransport:
+    classpath: ${APAMA_HOME}/lib/connectivity-unit-test-harness.jar
+    class: com.softwareag.connectivity.testplugins.NullTransport
 
 
 startChains:
@@ -33,7 +35,10 @@ startChains:
     - diagnosticCodec:
         output: file
         fileName: tsv-after.txt
-    - echoTransport
+    - unitTestHarness:
+        pluginUnderTest: towardsHost
+        echoBack: true
+    - nullTransport
   csvChain:
     - apama.eventMap
     - mapperCodec:
@@ -51,4 +56,7 @@ startChains:
     - diagnosticCodec:
         output: file
         fileName: csv-after.txt
-    - echoTransport
+    - unitTestHarness:
+        pluginUnderTest: towardsHost
+        echoBack: true
+    - nullTransport

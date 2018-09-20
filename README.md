@@ -42,13 +42,7 @@ To use custom images from your own repository then use:
 
 ## Running tests
 
-To run the tests for the plugin you will need to use an Apama command prompt.
-
-You will need to compile a test transport:
-
-    g++ -std=c++11 -o tests/libEchoTransport.so -I$APAMA_HOME/include -L$APAMA_HOME/lib -lapclient -I. -shared -fPIC EchoTransport.cpp
-
-Then run the tests from within the tests directory:
+To run the tests for the plugin you will need to use an Apama command prompt to run the tests from within the tests directory:
 
     pysys run
 

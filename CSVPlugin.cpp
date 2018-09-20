@@ -22,7 +22,7 @@ public:
 		: AbstractSimpleCodec(param), base_plugin_t("CSVPlugin")
 	{
 		MapExtractor configEx(config, "config");
-		std::string delim = configEx.getStringAllowEmpty("delimiter", ",");
+		std::string delim = configEx.getStringDisallowEmpty("delimiter", ",");
 		filterOnContentType = configEx.get<bool>("filterOnContentType", false);
 		contentTypeValue = configEx.getStringDisallowEmpty("contentType", "text/csv");
 		configEx.checkNoItemsRemaining();
